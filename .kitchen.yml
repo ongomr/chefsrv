@@ -4,23 +4,38 @@ driver:
 
 provisioner:
   name: chef_zero
-  # You may wish to disable always updating cookbooks in CI or other testing environments.
-  # For example:
-  #   always_update_cookbooks: <%= !ENV['CI'] %>
-  always_update_cookbooks: true
-
-verifier:
-  name: inspec
+#  require_chef_omnibus: true
+#  chef_omnibus_url: file:///mnt/data_bags/scripts/install.sh
+  environments_path: /Users/ongomr/DevOps/chef/envs
+  roles_path: /Users/ongomr/DevOps/chef/roles
 
 platforms:
-  - name: ubuntu-16.04
-  - name: centos-7.3
+  - name: centos7
+    driver:
+      customize:
+       memory: 2048
+       cpus: 2
+      box: centos7
+      box_url: /Users/ongomr/DevOps/vagrant/boxes/centos7.box
+      network:
+      - ["private_network", {ip: "192.168.56.84"}]
+      synced_folders:
+      - ["/Users/ongomr/DevOps/chef/data_bags/lab_data_bags/", "/mnt/data_bags", "disabled: false"]
 
+# Allocation Range started at IP: 192.168.56.100
 suites:
-  - name: default
+  - name: chfsrv
+    environment: lab
+    driver:
+      vm_hostname: chfsrv
+      customize:
+       memory: 4096
+       cpus: 2
+      network:
+      - ["private_network", {ip: "192.168.56.100"}]
+#      - ["public_network", {ip: "192.168.56.100"}]
     run_list:
       - recipe[chefsrv::default]
-    verifier:
-      inspec_tests:
-        - test/smoke/default
+    excludes:
+      -
     attributes:
