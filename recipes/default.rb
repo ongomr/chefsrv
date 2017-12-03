@@ -45,9 +45,10 @@ end
 
 # installing and running devstack
 execute "stack.sh" do
- cwd "#{node['stack']['home']}/devstack"
- command "./stack.sh"
- user "#{node['stack']['user']}"
- group "#{node['stack']['group']}"
- not_if "ps cax | grep horizon"
+  user "#{node['stack']['user']}"
+  group "#{node['stack']['group']}"
+  cwd "#{node['stack']['home']}/devstack"
+  environment ({'HOME' => "#{node['stack']['home']}", 'USER' => "#{node['stack']['user']}"})
+  command "./stack.sh"
+  not_if "ps cax | grep horizon"
 end
