@@ -4,38 +4,43 @@ driver:
 
 provisioner:
   name: chef_zero
-#  require_chef_omnibus: true
-#  chef_omnibus_url: file:///mnt/data_bags/scripts/install.sh
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: false
+  require_chef_omnibus: true
+  chef_omnibus_url: file:///mnt/share/scripts/install.sh
   environments_path: /Users/ongomr/DevOps/chef/envs
   roles_path: /Users/ongomr/DevOps/chef/roles
+verifier:
+  name: inspec
 
 platforms:
-  - name: centos7
+  - name: xenial
     driver:
       customize:
-       memory: 2048
-       cpus: 2
-      box: centos7
-      box_url: /Users/ongomr/DevOps/vagrant/boxes/centos7.box
+       memory: 1024
+       cpus: 1
+      box: xenial
+      box_url: /Users/ongomr/DevOps/vagrant/boxes/xenial.box
       network:
-      - ["private_network", {ip: "192.168.56.84"}]
+      - ["private_network", {ip: "192.168.56.80"}]
       synced_folders:
-      - ["/Users/ongomr/DevOps/chef/data_bags/lab_data_bags/", "/mnt/data_bags", "disabled: false"]
+      - ["/Users/ongomr/DevOps/chef/share/", "/mnt/share", "disabled: false"]
 
 # Allocation Range started at IP: 192.168.56.100
 suites:
-  - name: chfsrv
+  - name: devstack
     environment: lab
     driver:
-      vm_hostname: chfsrv
+      vm_hostname: devstack
       customize:
-       memory: 4096
+       memory: 6144
        cpus: 2
       network:
-      - ["private_network", {ip: "192.168.56.100"}]
-#      - ["public_network", {ip: "192.168.56.100"}]
+      - ["private_network", {ip: "192.168.56.120"}]
     run_list:
-      - recipe[chefsrv::default]
+      - recipe[devstack]
     excludes:
       -
     attributes:

@@ -1,4 +1,4 @@
-# chefsrv
+# devstack
 
 TODO: Enter the cookbook description here.
 

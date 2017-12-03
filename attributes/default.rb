@@ -1,33 +1,17 @@
-  #
-# Cookbook:: chefsrv
-# Recipe:: default
+#
+# Cookbook:: devstack
+# Attribue:: default
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
-default['chef-server']['accept_license'] = true
-default['chef-server']['version'] = nil
-default['chef-server']['package-source'] = nil
-default['chef-server']['api_fqdn'] = node['nil']
-default['chef-server']['topology'] = 'standalone'
-default['chef-server']['chef-ingredient']['timeout'] = 3600
+# default devstack user
+default['stack']['user'] = 'stack'
+default['stack']['group'] = 'stack'
+default['stack']['home'] = "/opt/#{node['stack']['user']}"
 
-node.default['chef-server']['configuration'] = <<-EOS
-notification_email 'RobertOngom@gmail.com'
-nginx['cache_max_size'] = '3500m'
-EOS
+# default devstack git source
+default['stack']['clone'] = 'git://git.openstack.org/openstack-dev/devstack'
 
-default['chef-server']['addons'] = {'manage' => '2.5.4',
-                                    'reporting' => '1.7.5',
-                                    'push-jobs-server' => '2.2.2'
-                                   }
-
-# Chef Server Setup Specifics
-default['chefsrv']['username'] = 'ongomr' # Add to Chef Vault
-default['chefsrv']['password'] = 'ask4help' # Add to Chef Vault
-default['chefsrv']['full_name'] = 'Robert Mugabe Ongom'
-default['chefsrv']['email'] = 'RobertOngom@gmail.com'
-default['chefsrv']['user_perm_file_path'] = '/root/ongomr.pem'
-default['chefsrv']['org_name'] = 'lab'
-default['chefsrv']['org_discription'] = 'Personal Lab Organisation'
-default['chefsrv']['association_user'] = node['chefsrv']['username']
-default['chefsrv']['org_perm_name'] = 'lab-validator.pem'
+# default devstack passwords
+default['stack']['password'] = 'secret'
+default['stack']['ipaddress'] = '192.168.56.120' # use '#{node['ipaddress']}' if you using one interface on the server
